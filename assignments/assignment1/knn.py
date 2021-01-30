@@ -95,12 +95,8 @@ class KNN:
         dists, np array (num_test_samples, num_train_samples) - array
            with distances between each test and each train sample
         '''
-        num_train = self.train_X.shape[0]
-        num_test = X.shape[0]
-        # Using float32 to to save memory - the default is float64
-        dists = np.zeros((num_test, num_train), np.float32)
 
-        dists = abs(X.reshape(-1,1,3072) - self.train_X).sum(axis=2)
+        dists = abs(X.reshape(-1,1, X.shape[1]) - self.train_X).sum(axis=2)
 
         return  dists
 
