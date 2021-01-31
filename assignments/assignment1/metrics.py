@@ -14,6 +14,9 @@ def binary_classification_metrics(prediction, ground_truth):
     accuracy = 0
     f1 = 0
 
+    res = sum([a == b for a, b in zip(prediction, ground_truth)])
+    accuracy = res / len(prediction)
+
     # TODO: implement metrics!
     # Some helpful links:
     # https://en.wikipedia.org/wiki/Precision_and_recall
