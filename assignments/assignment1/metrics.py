@@ -9,13 +9,24 @@ def binary_classification_metrics(prediction, ground_truth):
     Returns:
     precision, recall, f1, accuracy - classification metrics
     '''
-    precision = 0
-    recall = 0
-    accuracy = 0
-    f1 = 0
 
     res = sum([a == b for a, b in zip(prediction, ground_truth)])
     accuracy = res / len(prediction)
+
+    tp = sum([a == b and a == 1 for a, b in zip(prediction, ground_truth)])
+
+    fp = sum([a != b and a == 1 for a, b in zip(prediction, ground_truth)])
+
+    #tn = sum([a == b and a == 0 for a, b in zip(prediction, ground_truth)])
+
+    fn = sum([a != b and a == 0 for a, b in zip(prediction, ground_truth)])
+
+    precision = tp / (tp + fp)
+    recall = tp / (tp + fn)
+
+    f1 = 2 * (precision * recall / (precision + recall))
+
+
 
     # TODO: implement metrics!
     # Some helpful links:
