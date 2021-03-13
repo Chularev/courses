@@ -15,11 +15,11 @@ def binary_classification_metrics(prediction, ground_truth):
 
     tp = sum([a == b and a == 1 for a, b in zip(prediction, ground_truth)])
 
-    fp = sum([a != b and a == 1 for a, b in zip(prediction, ground_truth)])
+    fn = sum([a != b and a == 0 for a, b in zip(prediction, ground_truth)])
 
     #tn = sum([a == b and a == 0 for a, b in zip(prediction, ground_truth)])
 
-    fn = sum([a != b and a == 0 for a, b in zip(prediction, ground_truth)])
+    fp = sum([a != b and a == 1 for a, b in zip(prediction, ground_truth)])
 
     precision = tp / (tp + fp)
     recall = tp / (tp + fn)
