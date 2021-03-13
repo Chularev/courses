@@ -1,3 +1,5 @@
+import numpy as np
+
 def binary_classification_metrics(prediction, ground_truth):
     '''
     Computes metrics for binary classification
@@ -21,8 +23,8 @@ def binary_classification_metrics(prediction, ground_truth):
 
     fp = sum([a != b and a == 1 for a, b in zip(prediction, ground_truth)])
 
-    precision = tp / (tp + fp)
-    recall = tp / (tp + fn)
+    precision = np.round(tp / (tp + fp),2)
+    recall = np.round(tp / (tp + fn),2)
 
     f1 = 2 * (precision * recall / (precision + recall))
 
