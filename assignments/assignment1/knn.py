@@ -100,6 +100,18 @@ class KNN:
 
         return  dists
 
+    def predict_labels(self, dists, type):
+
+        num_test = dists.shape[0]
+        pred = np.zeros(num_test, type)
+        for i in range(num_test):
+            sort_index = np.argsort(dists[i])
+            k = sort_index[:self.k]
+            labels = self.train_y[k]
+            unique, counts = np.unique(labels, return_counts=True)
+            pred[i] = unique[np.argsort(counts)][-1]
+        return pred
+
     def predict_labels_binary(self, dists):
         '''
         Returns model predictions for binary classification case
@@ -112,15 +124,8 @@ class KNN:
         pred, np array of bool (num_test_samples) - binary predictions 
            for every test sample
         '''
-        num_test = dists.shape[0]
-        pred = np.zeros(num_test, np.bool)
-        for i in range(num_test):
-            sort_index = np.argsort(dists[i])
-            k = sort_index[:self.k]
-            labels = self.train_y[k]
-            unique, counts = np.unique(labels, return_counts=True)
-            pred[i] = unique[np.argsort(counts)][-1]
-        return pred
+
+        return self.predict_labels(dists, np.bool)
 
     def predict_labels_multiclass(self, dists):
         '''
@@ -134,4 +139,4 @@ class KNN:
         pred, np array of int (num_test_samples) - predicted class index 
            for every test sample
         '''
-        return self.predict_labels_binary(dists)
+        return self.predict_labels(dists, np.int)
