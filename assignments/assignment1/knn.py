@@ -102,31 +102,18 @@ class KNN:
 
     def get_label_with_min_distance(self,  dists, labels):
         unique, counts = np.unique(labels, return_counts=True)
-        indexes = np.argsort(counts)
+        max_count = max(counts)
 
-        d =[]
-        l =[]
+        res_labels = []
+        res_dists = []
 
-        label = unique[indexes][-1]
+        for i in range(len(unique)):
+            if counts[i] == max_count:
+                indices = [j for j, x in enumerate(labels) if x == unique[i]]
+                res_labels.append(unique[i])
+                res_dists.append(sum(dists[indices]))
 
-        ind = [i for i, x in enumerate(labels) if x == label]
-        d.append(sum(dists[ind]))
-        l.append(label)
-
-        i = - 1
-        while abs(i) < len(unique) and counts[indexes][i] == counts[indexes][i - 1]:
-            label = unique[indexes][i - 1]
-            ind = [i for i, x in enumerate(labels) if x == label]
-            d.append(sum(dists[ind]))
-            l.append(label)
-            i = i - 1
-
-        '''''
-        print(d)
-        print(l)
-        print('------------------')
-        '''
-        return l[np.argsort(d)[0]]
+        return res_labels[np.argsort(res_dists)[0]]
 
 
 
