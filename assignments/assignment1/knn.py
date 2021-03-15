@@ -109,9 +109,9 @@ class KNN:
 
         for i in range(len(unique)):
             if counts[i] == max_count:
-                indices = [j for j, x in enumerate(labels) if x == unique[i]]
                 res_labels.append(unique[i])
-                res_dists.append(sum(dists[indices]))
+                indexes = [index for index, x in enumerate(labels) if x == unique[i]]
+                res_dists.append(sum(dists[indexes]))
 
         return res_labels[np.argsort(res_dists)[0]]
 
