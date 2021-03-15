@@ -100,7 +100,7 @@ class KNN:
 
         return  dists
 
-    def get_min(self,  summ_distance, labels):
+    def get_min(self,  dists, labels):
         unique, counts = np.unique(labels, return_counts=True)
         indexes = np.argsort(counts)
 
@@ -108,13 +108,16 @@ class KNN:
         l =[]
 
         label = unique[indexes][-1]
-        d.append(summ_distance[label])
+
+        ind = [i for i, x in enumerate(labels) if x == label]
+        d.append(sum(dists[ind]))
         l.append(label)
 
         i = - 1
         while abs(i) < len(unique) and counts[indexes][i] == counts[indexes][i - 1]:
             label = unique[indexes][i - 1]
-            d.append(summ_distance[label])
+            ind = [i for i, x in enumerate(labels) if x == label]
+            d.append(sum(dists[ind]))
             l.append(label)
             i = i - 1
 
@@ -134,19 +137,10 @@ class KNN:
         for i in range(num_test):
             indexes = np.argsort(dists[i])[:self.k]
 
-            neighbor_dist = dists[i][indexes]
             labels = self.train_y[indexes]
 
-
-            summ_distance = {}
-            for i_label in range(0, len(labels)):
-                if labels[i_label] in summ_distance:
-                    summ_distance[labels[i_label]] += neighbor_dist[i_label]
-                else:
-                    summ_distance[labels[i_label]] = neighbor_dist[i_label]
-
             if self.k > 1:
-                pred[i] = self.get_min(summ_distance, labels)
+                pred[i] = self.get_min(dists[i][indexes], labels)
             else:
                 pred[i] = labels[0]
         return pred
