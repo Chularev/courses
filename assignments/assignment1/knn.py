@@ -100,7 +100,7 @@ class KNN:
 
         return  dists
 
-    def get_min(self,  dists, labels):
+    def get_label_with_min_distance(self,  dists, labels):
         unique, counts = np.unique(labels, return_counts=True)
         indexes = np.argsort(counts)
 
@@ -140,7 +140,7 @@ class KNN:
             labels = self.train_y[indexes]
 
             if self.k > 1:
-                pred[i] = self.get_min(dists[i][indexes], labels)
+                pred[i] = self.get_label_with_min_distance(dists[i][indexes], labels)
             else:
                 pred[i] = labels[0]
         return pred
