@@ -100,16 +100,55 @@ class KNN:
 
         return  dists
 
+    def get_min(self,  summ_distance, labels):
+        unique, counts = np.unique(labels, return_counts=True)
+        indexes = np.argsort(counts)
+
+        d =[]
+        l =[]
+
+        label = unique[indexes][-1]
+        d.append(summ_distance[label])
+        l.append(label)
+
+        i = - 1
+        while abs(i) < len(unique) and counts[indexes][i] == counts[indexes][i - 1]:
+            label = unique[indexes][i - 1]
+            d.append(summ_distance[label])
+            l.append(label)
+            i = i - 1
+
+        '''''
+        print(d)
+        print(l)
+        print('------------------')
+        '''
+        return l[np.argsort(d)[0]]
+
+
+
     def predict_labels(self, dists, type):
 
         num_test = dists.shape[0]
         pred = np.zeros(num_test, type)
         for i in range(num_test):
-            sort_index = np.argsort(dists[i])
-            k = sort_index[:self.k]
-            labels = self.train_y[k]
-            unique, counts = np.unique(labels, return_counts=True)
-            pred[i] = unique[np.argsort(counts)][-1]
+            indexes = np.argsort(dists[i])[:self.k]
+
+            neighbor_dist = dists[i][indexes]
+            labels = self.train_y[indexes]
+
+
+            summ_distance = {}
+            for i_label in range(0, len(labels)):
+                if labels[i_label] in summ_distance:
+                    summ_distance[labels[i_label]] += neighbor_dist[i_label]
+                else:
+                    summ_distance[labels[i_label]] = neighbor_dist[i_label]
+
+            if self.k > 1:
+                pred[i] = self.get_min(summ_distance, labels)
+            else:
+                pred[i] = labels[0]
         return pred
 
     def predict_labels_binary(self, dists):
