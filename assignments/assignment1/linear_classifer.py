@@ -67,14 +67,10 @@ def softmax_with_cross_entropy(predictions, target_index):
     prob = softmax(predictions.copy())
     loss = cross_entropy_loss(prob, index)
 
-    dprediction = np.empty(len(predictions), dtype=object)
+    y = np.zeros(len(predictions))
+    y[target_index] = 1
 
-    for i in range(len(predictions)):
-        if i in index:
-            dprediction[i] =  prob[i] -1
-        else:
-            dprediction[i] = prob[i]
-            
+    dprediction = prob -1 * y
     return loss, dprediction
 
 
@@ -85,6 +81,7 @@ def l2_regularization(W, reg_strength):
     Arguments:
       W, np array - weights
       reg_strength - float value
+
 
     Returns:
       loss, single value - l2 regularization loss
