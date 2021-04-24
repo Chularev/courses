@@ -16,11 +16,9 @@ def softmax(predictions):
 
     if len(predictions.shape) == 2:
         s = np.max(predictions, axis=1)
-        s = s[:, np.newaxis] # necessary step to do broadcasting
-        e_x = np.exp(predictions - s)
+        e_x = np.exp(predictions - s[:, np.newaxis])
         div = np.sum(e_x, axis=1)
-        div = div[:, np.newaxis] # dito
-        return e_x / div
+        return e_x / div[:, np.newaxis]
 
     exps = np.exp(predictions - np.max(predictions))
     return exps / np.sum(exps)
