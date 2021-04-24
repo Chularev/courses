@@ -14,10 +14,8 @@ def softmax(predictions):
         probability for every class, 0..1
     '''
 
-    predictions -= np.max(predictions)
-
-    e_x = np.exp(predictions)
-    return e_x / e_x.sum(axis=0)
+    exps = np.exp(predictions - np.max(predictions))
+    return exps / np.sum(exps)
 
 
 def cross_entropy_loss(probs, target_index):
