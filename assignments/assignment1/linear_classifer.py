@@ -45,9 +45,14 @@ def cross_entropy_loss(probs, target_index):
     if len(target_index.shape) == 1:
         probs = probs[target_index]
     else:
-        probs = probs[range( probs.shape[0] ), target_index]
+        mask = np.zeros(probs.shape, bool)
+        col_indices = target_index[:, 0]
+        row_indices = np.arange(target_index.shape[0])
+        mask[row_indices, col_indices] = True
+        probs = probs[mask]
+        #probs = probs[range( probs.shape[0] ), target_index]
 
-    return np.mean(-1 * sum(np.log(probs)))
+    return -np.mean(np.log(probs))
 
 
 def softmax_with_cross_entropy(predictions, target_index):
@@ -81,9 +86,18 @@ def softmax_with_cross_entropy(predictions, target_index):
     if len(index.shape) == 1:
         y[index] = 1
     else:
-        y[range(y.shape[0]) , index] = 1
+        mask = np.zeros(y.shape, bool)
+        col_indices = target_index[:, 0]
+        row_indices = np.arange(target_index.shape[0])
+        mask[row_indices, col_indices] = True
+        y[mask] = 1
+
+        #y[range(y.shape[0]) , index] = 1
 
     dprediction = prob -1 * y
+
+    if predictions.ndim == 2:
+        dprediction = dprediction / predictions.shape[0]
     return loss, dprediction
 
 
