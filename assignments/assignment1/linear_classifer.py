@@ -14,7 +14,7 @@ def softmax(predictions):
         probability for every class, 0..1
     '''
 
-    predictions -= max(predictions)
+    predictions -= np.max(predictions)
 
     e_x = np.exp(predictions)
     return e_x / e_x.sum(axis=0)
@@ -72,8 +72,12 @@ def softmax_with_cross_entropy(predictions, target_index):
     prob = softmax(predictions.copy())
     loss = cross_entropy_loss(prob, index)
 
-    y = np.zeros(len(predictions))
-    y[target_index] = 1
+    y = np.zeros_like(predictions)
+
+    if len(index.shape) == 1:
+        y[index] = 1
+    else:
+        y[range(y.shape[0]) , index] = 1
 
     dprediction = prob -1 * y
     return loss, dprediction
