@@ -73,6 +73,9 @@ def softmax_with_cross_entropy(predictions, target_index):
     else:
         index = target_index.copy()
 
+    if index.ndim == 1 and index.size > 1:
+        index = index.reshape(-1,1)
+
     prob = softmax(predictions.copy())
     loss = cross_entropy_loss(prob, index)
 
