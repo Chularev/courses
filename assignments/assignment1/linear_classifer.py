@@ -127,10 +127,13 @@ def linear_softmax(X, W, target_index):
     '''
     predictions = np.dot(X, W)
 
+    loss, dprediction = softmax_with_cross_entropy(predictions, target_index)
+
+
     # TODO implement prediction and gradient over W
-    # Your final implementation shouldn't have any loops
-    raise Exception("Not implemented!")
-    
+
+    dW = np.dot(X.T, dprediction)
+
     return loss, dW
 
 
