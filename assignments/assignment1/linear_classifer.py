@@ -109,8 +109,8 @@ def l2_regularization(W, reg_strength):
 
     # TODO: implement l2 regularization and gradient
     # Your final implementation shouldn't have any loops
-    raise Exception("Not implemented!")
-
+    loss = reg_strength * np.sum(np.power(W, 2))
+    grad = reg_strength * 2 * W
     return loss, grad
     
 
