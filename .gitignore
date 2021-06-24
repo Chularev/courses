@@ -1,0 +1,5 @@
+assignments/assignment[0-9]*/.idea/*
+assignments/assignment[0-9]*/venv/*
+assignments/assignment[0-9]*/data/*
+assignments/assignment[0-9]*/__pycache__/*
+assignments/assignment[0-9]*/.ipynb_checkpoints/*
