@@ -58,7 +58,11 @@ class ReLULayer:
         # TODO: Implement forward pass
         # Hint: you'll need to save some information about X
         # to use it later in the backward pass
-        raise Exception("Not implemented!")
+
+        self.indexes = np.where(X < 0)
+        result = X.copy()
+        result[self.indexes] = 0
+        return result
 
     def backward(self, d_out):
         """
@@ -74,7 +78,8 @@ class ReLULayer:
         """
         # TODO: Implement backward pass
         # Your final implementation shouldn't have any loops
-        raise Exception("Not implemented!")
+        d_result = d_out.copy()
+        d_result[self.indexes] = 0
         return d_result
 
     def params(self):
