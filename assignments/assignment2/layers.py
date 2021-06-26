@@ -121,10 +121,10 @@ class FullyConnectedLayer:
         # It should be pretty similar to linear classifier from
         # the previous assignment
 
-        self.W.grad = np.dot(self.X.T, d_out)
-        self.B.grad = np.array([np.sum(d_out, axis=0)])
+        self.W.grad = np.dot(self.X.T, d_out)  # dL/dW = dL/dZ * dZ/dW = X.T * dL/dZ
+        self.B.grad = np.array([np.sum(d_out, axis=0)]) # dL/dB = dL/dZ * dZ/dB = I * dL/dZ
 
-        gradX = np.dot(d_out, self.W.value.T)
+        gradX = np.dot(d_out, self.W.value.T) # dL/dX = dL/dZ * dZ/dX = dL/dZ * W.T
         return gradX
 
     def params(self):
