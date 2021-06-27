@@ -82,9 +82,12 @@ class TwoLayerNet:
         # TODO: Implement predict
         # Hint: some of the code of the compute_loss_and_gradients
         # can be reused
-        pred = np.zeros(X.shape[0], np.int)
 
-        raise Exception("Not implemented!")
+        l1_result = self.FCL1.forward(X)
+        relu_result = self.ReLu.forward(l1_result)
+        l2_result = self.FCL2.forward(relu_result)
+
+        pred = np.argmax(l2_result, axis=1)
         return pred
 
     def params(self):
