@@ -16,9 +16,12 @@ class TwoLayerNet:
         hidden_layer_size, int - number of neurons in the hidden layer
         reg, float - L2 regularization strength
         """
-        self.reg = reg
         # TODO Create necessary layers
-        raise Exception("Not implemented!")
+
+        self.FCL1 = FullyConnectedLayer(n_input, hidden_layer_size)
+        self.ReLu = ReLULayer()
+        self.FCL2 = FullyConnectedLayer(hidden_layer_size, n_output)
+        self.reg = reg
 
     def compute_loss_and_gradients(self, X, y):
         """
