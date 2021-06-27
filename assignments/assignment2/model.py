@@ -36,14 +36,36 @@ class TwoLayerNet:
         # clear parameter gradients aggregated from the previous pass
         # TODO Set parameter gradient to zeros
         # Hint: using self.params() might be useful!
-        raise Exception("Not implemented!")
+
+        params = self.params()
+        params['W1'] = params['B1'] = params['W2'] = params['B2'] = 0
         
         # TODO Compute loss and fill param gradients
         # by running forward and backward passes through the model
+        l1_result = self.FCL1.forward(X)
+        relu_result = self.ReLu.forward(l1_result)
+        l2_result = self.FCL2.forward(relu_result)
+
+        loss, grad = softmax_with_cross_entropy(l2_result,y)
+
+        grad = self.FCL2.backward(grad)
+        grad = self.ReLu.backward(grad)
+        grad = self.FCL1.backward(grad)
         
         # After that, implement l2 regularization on all params
         # Hint: self.params() is useful again!
-        raise Exception("Not implemented!")
+
+        W1_loss, W1_grad = l2_regularization(self.FCL1.W.value, self.reg)
+        self.FCL1.W.grad += W1_grad
+        B1_loss, B1_grad = l2_regularization(self.FCL1.B.value, self.reg)
+        self.FCL1.B.grad += B1_grad
+        W2_loss, W2_grad = l2_regularization(self.FCL2.W.value, self.reg)
+        self.FCL2.W.grad += W2_grad
+        B2_loss, B2_grad = l2_regularization(self.FCL2.B.value, self.reg)
+        self.FCL2.B.grad += B2_grad
+        self.params()
+
+        loss = loss + W1_loss + B1_loss + W2_loss + B2_loss
 
         return loss
 
@@ -70,6 +92,10 @@ class TwoLayerNet:
 
         # TODO Implement aggregating all of the params
 
-        raise Exception("Not implemented!")
+        result['W1'] = self.FCL1.W
+        result['B1'] = self.FCL1.B
+
+        result['W2'] = self.FCL2.W
+        result['B2'] = self.FCL2.B
 
         return result
