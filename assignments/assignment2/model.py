@@ -38,7 +38,7 @@ class TwoLayerNet:
         # Hint: using self.params() might be useful!
 
         params = self.params()
-        params['W1'] = params['B1'] = params['W2'] = params['B2'] = 0
+        params['W1'].grad = params['B1'].grad = params['W2'].grad = params['B2'].grad = 0
         
         # TODO Compute loss and fill param gradients
         # by running forward and backward passes through the model
@@ -50,22 +50,26 @@ class TwoLayerNet:
 
         grad = self.FCL2.backward(grad)
         grad = self.ReLu.backward(grad)
-        grad = self.FCL1.backward(grad)
+        self.FCL1.backward(grad)
         
         # After that, implement l2 regularization on all params
         # Hint: self.params() is useful again!
 
         W1_loss, W1_grad = l2_regularization(self.FCL1.W.value, self.reg)
         self.FCL1.W.grad += W1_grad
+        loss += W1_loss
+
         B1_loss, B1_grad = l2_regularization(self.FCL1.B.value, self.reg)
         self.FCL1.B.grad += B1_grad
+        loss += B1_loss
+
         W2_loss, W2_grad = l2_regularization(self.FCL2.W.value, self.reg)
         self.FCL2.W.grad += W2_grad
+        loss += W2_loss
+
         B2_loss, B2_grad = l2_regularization(self.FCL2.B.value, self.reg)
         self.FCL2.B.grad += B2_grad
-        self.params()
-
-        loss = loss + W1_loss + B1_loss + W2_loss + B2_loss
+        loss += B2_loss
 
         return loss
 
