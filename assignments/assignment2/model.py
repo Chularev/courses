@@ -56,19 +56,19 @@ class TwoLayerNet:
         # Hint: self.params() is useful again!
 
         W1_loss, W1_grad = l2_regularization(self.FCL1.W.value, self.reg)
-        self.FCL1.W.grad += W1_grad
+        params['W1'].grad += W1_grad
         loss += W1_loss
 
         B1_loss, B1_grad = l2_regularization(self.FCL1.B.value, self.reg)
-        self.FCL1.B.grad += B1_grad
+        params['B1'].grad += B1_grad
         loss += B1_loss
 
         W2_loss, W2_grad = l2_regularization(self.FCL2.W.value, self.reg)
-        self.FCL2.W.grad += W2_grad
+        params['W2'].grad += W2_grad
         loss += W2_loss
 
         B2_loss, B2_grad = l2_regularization(self.FCL2.B.value, self.reg)
-        self.FCL2.B.grad += B2_grad
+        params['B2'].grad += B2_grad
         loss += B2_loss
 
         return loss
