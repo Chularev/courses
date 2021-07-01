@@ -18,9 +18,10 @@ class TwoLayerNet:
         """
         # TODO Create necessary layers
 
-        self.FCL1 = FullyConnectedLayer(n_input, hidden_layer_size)
-        self.ReLu = ReLULayer()
-        self.FCL2 = FullyConnectedLayer(hidden_layer_size, n_output)
+        self.layers = []
+        self.layers.append(FullyConnectedLayer(n_input, hidden_layer_size))
+        self.layers.append(ReLULayer())
+        self.layers.append(FullyConnectedLayer(hidden_layer_size, n_output))
         self.reg = reg
 
     def compute_loss_and_gradients(self, X, y):
@@ -37,39 +38,25 @@ class TwoLayerNet:
         # TODO Set parameter gradient to zeros
         # Hint: using self.params() might be useful!
 
-        params = self.params()
-        params['W1'].grad = params['B1'].grad = params['W2'].grad = params['B2'].grad = 0
-        
+        for param in self.params().values():
+            param.grad = 0
+
         # TODO Compute loss and fill param gradients
         # by running forward and backward passes through the model
-        l1_result = self.FCL1.forward(X)
-        relu_result = self.ReLu.forward(l1_result)
-        l2_result = self.FCL2.forward(relu_result)
+        for layer in self.layers:
+            X = layer.forward(X)
+        loss, grad = softmax_with_cross_entropy(X, y)
 
-        loss, grad = softmax_with_cross_entropy(l2_result,y)
-
-        grad = self.FCL2.backward(grad)
-        grad = self.ReLu.backward(grad)
-        self.FCL1.backward(grad)
+        for layer in reversed(self.layers):
+            grad = layer.backward(grad)
         
         # After that, implement l2 regularization on all params
         # Hint: self.params() is useful again!
 
-        W1_loss, W1_grad = l2_regularization(self.FCL1.W.value, self.reg)
-        params['W1'].grad += W1_grad
-        loss += W1_loss
-
-        B1_loss, B1_grad = l2_regularization(self.FCL1.B.value, self.reg)
-        params['B1'].grad += B1_grad
-        loss += B1_loss
-
-        W2_loss, W2_grad = l2_regularization(self.FCL2.W.value, self.reg)
-        params['W2'].grad += W2_grad
-        loss += W2_loss
-
-        B2_loss, B2_grad = l2_regularization(self.FCL2.B.value, self.reg)
-        params['B2'].grad += B2_grad
-        loss += B2_loss
+        for param in self.params().values():
+            loss_l2, grad_l2 = l2_regularization(param.value, self.reg)
+            loss += loss_l2
+            param.grad += grad_l2
 
         return loss
 
@@ -87,11 +74,9 @@ class TwoLayerNet:
         # Hint: some of the code of the compute_loss_and_gradients
         # can be reused
 
-        l1_result = self.FCL1.forward(X)
-        relu_result = self.ReLu.forward(l1_result)
-        l2_result = self.FCL2.forward(relu_result)
-
-        pred = np.argmax(l2_result, axis=1)
+        for layer in self.layers:
+            X = layer.forward(X)
+        pred = np.argmax(X, axis=1)
         return pred
 
     def params(self):
@@ -99,10 +84,10 @@ class TwoLayerNet:
 
         # TODO Implement aggregating all of the params
 
-        result['W1'] = self.FCL1.W
-        result['B1'] = self.FCL1.B
+        result['W1'] = self.layers[0].W
+        result['B1'] = self.layers[0].B
 
-        result['W2'] = self.FCL2.W
-        result['B2'] = self.FCL2.B
+        result['W2'] = self.layers[2].W
+        result['B2'] = self.layers[2].B
 
         return result
