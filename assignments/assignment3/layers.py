@@ -322,9 +322,32 @@ class MaxPoolingLayer:
         # TODO: Implement maxpool forward pass
         # Hint: Similarly to Conv layer, loop on
         # output x/y dimension
-        raise Exception("Not implemented!")
+        batch_size, height, width, channels = X.shape
 
-    def backward(self, d_out):
+        self.X = X.copy()
+
+        out_height = (height - self.pool_size) // self.stride + 1
+        out_width = (width - self.pool_size) // self.stride + 1
+
+        out = np.zeros([batch_size, out_height, out_width, channels])
+
+        # TODO: Implement maxpool forward pass
+        # Hint: Similarly to Conv layer, loop on
+        # output x/y dimension
+
+        for y in range(out_height):
+            for x in range(out_width):
+                y_stride = y * self.stride
+                x_stride = x * self.stride
+
+                out[:, y, x, :] += np.max(
+                    X[:, y_stride:y_stride + self.pool_size, x_stride:x_stride + self.pool_size, :],
+                    axis=(1, 2)
+                )
+
+        return out
+
+def backward(self, d_out):
         # TODO: Implement maxpool backward pass
         batch_size, height, width, channels = self.X.shape
         raise Exception("Not implemented!")
