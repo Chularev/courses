@@ -266,7 +266,7 @@ class ConvolutionalLayer:
         # when you implemented FullyConnectedLayer
         # Just do it the same number of times and accumulate gradients
 
-        batch_size, height, width, channels = self.X.shape
+        batch_size, height, width, channels = self.X.value.shape
         _, out_height, out_width, out_channels = d_out.shape
 
         # TODO: Implement backward pass
