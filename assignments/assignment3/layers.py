@@ -256,7 +256,7 @@ class ConvolutionalLayer:
 
                 out[:, y, x, :] = slice_X.dot(slice_W) + self.B.value
 
-    raise out
+        return out
 
 
     def backward(self, d_out):
