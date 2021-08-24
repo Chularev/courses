@@ -340,7 +340,7 @@ class MaxPoolingLayer:
                 y_stride = y * self.stride
                 x_stride = x * self.stride
 
-                out[:, y, x, :] += np.max(
+                out[:, y, x, :] = np.max(
                     X[:, y_stride:y_stride + self.pool_size, x_stride:x_stride + self.pool_size, :],
                     axis=(1, 2)
                 )
