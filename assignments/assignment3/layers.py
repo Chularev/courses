@@ -228,20 +228,35 @@ class ConvolutionalLayer:
     def forward(self, X):
         batch_size, height, width, channels = X.shape
 
-        out_height = 0
-        out_width = 0
+        self.X = Param(X.copy())
+
+        out_height = height - self.filter_size + 2 * self.padding
+        out_width = width - self.filter_size + 2 * self.padding
         
         # TODO: Implement forward pass
         # Hint: setup variables that hold the result
         # and one x/y location at a time in the loop below
+
+        out = np.zeros([batch_size, out_height, out_width, self.out_channels])
+
+        self.X.value = np.pad(
+            array=self.X.value,
+            pad_width=((0, 0), (self.padding, self.padding), (self.padding, self.padding), (0, 0)),
+            mode='constant'
+        )
+
         
         # It's ok to use loops for going over width and height
         # but try to avoid having any other loops
         for y in range(out_height):
             for x in range(out_width):
-                # TODO: Implement forward pass for specific location
-                pass
-        raise Exception("Not implemented!")
+                slice_X = self.X.value[:, y:y + self.filter_size, x:x + self.filter_size, :] \
+                    .reshape(batch_size, -1)
+                slice_W = self.W.value.reshape(-1, self.out_channels)
+
+                out[:, y, x, :] = slice_X.dot(slice_W) + self.B.value
+
+    raise out
 
 
     def backward(self, d_out):
