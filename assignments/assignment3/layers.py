@@ -248,11 +248,12 @@ class ConvolutionalLayer:
         
         # It's ok to use loops for going over width and height
         # but try to avoid having any other loops
+
+        slice_W = self.W.value.reshape(-1, self.out_channels)
         for y in range(out_height):
             for x in range(out_width):
                 slice_X = self.X.value[:, y:y + self.filter_size, x:x + self.filter_size, :] \
                     .reshape(batch_size, -1)
-                slice_W = self.W.value.reshape(-1, self.out_channels)
 
                 out[:, y, x, :] = slice_X.dot(slice_W) + self.B.value
 
@@ -274,14 +275,32 @@ class ConvolutionalLayer:
         # of the output
 
         # Try to avoid having any other loops here too
+        slice_W = self.W.value.reshape(-1, self.out_channels)
+
+        grad_X = np.zeros_like(self.X.value)
+
         for y in range(out_height):
             for x in range(out_width):
                 # TODO: Implement backward pass for specific location
                 # Aggregate gradients for both the input and
                 # the parameters (W and B)
+
+                slice_X = self.X.value[:, y:y + self.filter_size, x:x + self.filter_size, :] \
+                    .reshape(batch_size, -1)
+
+                self.W.grad += \
+                    np.dot(slice_X.T, d_out[:, y, x, :]) \
+                        .reshape(self.filter_size, self.filter_size, self.in_channels, out_channels)
+
+                self.B.grad += np.sum(d_out[:, y, x, :], axis=0)
+
+                grad_X[:, y:y + self.filter_size, x:x + self.filter_size, :] += \
+                    np.dot(d_out[:, y, x, :], slice_W.T) \
+                        .reshape(batch_size, self.filter_size, self.filter_size, self.in_channels)
+
                 pass
 
-        raise Exception("Not implemented!")
+        return grad_X[:, self.padding:height - self.padding, self.padding:width - self.padding, :]
 
     def params(self):
         return { 'W': self.W, 'B': self.B }
