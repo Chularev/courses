@@ -230,8 +230,8 @@ class ConvolutionalLayer:
 
         self.X = Param(X.copy())
 
-        out_height = height - self.filter_size + 2 * self.padding
-        out_width = width - self.filter_size + 2 * self.padding
+        out_height = height + 1 - self.filter_size + 2 * self.padding
+        out_width = width + 1 - self.filter_size + 2 * self.padding
         
         # TODO: Implement forward pass
         # Hint: setup variables that hold the result
