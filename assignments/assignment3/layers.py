@@ -298,8 +298,6 @@ class ConvolutionalLayer:
                     np.dot(d_out[:, y, x, :], slice_W.T) \
                         .reshape(batch_size, self.filter_size, self.filter_size, self.in_channels)
 
-                pass
-
         return grad_X[:, self.padding:height - self.padding, self.padding:width - self.padding, :]
 
     def params(self):
