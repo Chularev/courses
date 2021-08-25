@@ -363,9 +363,9 @@ class MaxPoolingLayer:
                 slice_X = self.X[:, y_stride: y_stride + self.pool_size, x_stride: x_stride + self.pool_size, :]
                 slice_x_reshape = slice_X.reshape((batch_size, self.pool_size * self.pool_size, channels))
 
-                tmp_result = np.zeros(slice_x_reshape.shape)
-
                 maxpool_inds = np.argmax(slice_x_reshape, axis=1).flatten()
+
+                tmp_result = np.zeros(slice_x_reshape.shape)
                 tmp_result[batch_inds, maxpool_inds, channels_inds] = d_out[batch_inds, y, x, channels_inds]
 
                 result[:, y_stride: y_stride + self.pool_size, x_stride: x_stride + self.pool_size, :] = tmp_result.reshape(
