@@ -347,10 +347,25 @@ class MaxPoolingLayer:
 
         return out
 
-def backward(self, d_out):
+    def backward(self, d_out):
         # TODO: Implement maxpool backward pass
-        batch_size, height, width, channels = self.X.shape
-        raise Exception("Not implemented!")
+        result = np.zeros_like(self.X)
+        batch_size, height, width, channels = d_out.shape
+
+        for y in range(height):
+            for x in range(width):
+                y_stride = y * self.stride
+                x_stride = x * self.stride
+
+                slice_X = self.X[:, y_stride:y_stride + self.pool_size, x_stride:x_stride + self.pool_size, :]
+                slice_grad = d_out[:, y:y+1, x:x+1, :]
+
+                max_slice_X = np.max(slice_X, axis=(1, 2))[:, np.newaxis, np.newaxis, :]
+
+                is_max = slice_X == max_slice_X
+                result[:, y_stride:y_stride + self.pool_size, x_stride:x_stride + self.pool_size, :] += slice_grad * is_max
+
+        return result
 
     def params(self):
         return {}
