@@ -350,28 +350,29 @@ class MaxPoolingLayer:
     def backward(self, d_out):
         # TODO: Implement maxpool backward pass
         batch_size, height, width, channels = self.X.shape
-        _, out_height, out_width, out_channels = d_out.shape
+        _, out_height, out_width, _ = d_out.shape
 
-        d_in = np.zeros(self.X.shape)
+        result = np.zeros(self.X.shape)
         batch_inds, channels_inds = np.repeat(range(batch_size), channels), np.tile(range(channels), batch_size)
 
         for y in range(out_height):
             for x in range(out_width):
-                pixel_region = self.X[:, y * self.stride: y * self.stride + self.pool_size,
-                               x * self.stride: x * self.stride + self.pool_size, :]
-                converted_pixel_region = pixel_region.reshape((batch_size, self.pool_size * self.pool_size, channels))
+                y_stride = y * self.stride
+                x_stride = x * self.stride
 
-                pixel_region_in = np.zeros(converted_pixel_region.shape)
-                maxpool_inds = np.argmax(converted_pixel_region, axis=1).flatten()
+                slice_X = self.X[:, y_stride: y_stride + self.pool_size, x_stride: x_stride + self.pool_size, :]
+                slice_x_reshape = slice_X.reshape((batch_size, self.pool_size * self.pool_size, channels))
 
-                pixel_region_in[batch_inds, maxpool_inds, channels_inds] = d_out[batch_inds, y, x, channels_inds]
-                converted_pixel_region_in = pixel_region_in.reshape(
-                    (batch_size, self.pool_size, self.pool_size, channels))
+                tmp_result = np.zeros(slice_x_reshape.shape)
 
-                d_in[:, y * self.stride: y * self.stride + self.pool_size,
-                x * self.stride: x * self.stride + self.pool_size, :] = converted_pixel_region_in
+                maxpool_inds = np.argmax(slice_x_reshape, axis=1).flatten()
+                tmp_result[batch_inds, maxpool_inds, channels_inds] = d_out[batch_inds, y, x, channels_inds]
 
-        return d_in
+                result[:, y_stride: y_stride + self.pool_size, x_stride: x_stride + self.pool_size, :] = tmp_result.reshape(
+                    (batch_size, self.pool_size, self.pool_size, channels)
+                )
+
+        return result
 
     def params(self):
         return {}
