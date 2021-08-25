@@ -349,23 +349,29 @@ class MaxPoolingLayer:
 
     def backward(self, d_out):
         # TODO: Implement maxpool backward pass
-        result = np.zeros_like(self.X)
-        batch_size, height, width, channels = d_out.shape
+        batch_size, height, width, channels = self.X.shape
+        _, out_height, out_width, out_channels = d_out.shape
 
-        for y in range(height):
-            for x in range(width):
-                y_stride = y * self.stride
-                x_stride = x * self.stride
+        d_in = np.zeros(self.X.shape)
+        batch_inds, channels_inds = np.repeat(range(batch_size), channels), np.tile(range(channels), batch_size)
 
-                slice_X = self.X[:, y_stride:y_stride + self.pool_size, x_stride:x_stride + self.pool_size, :]
-                slice_grad = d_out[:, y:y+1, x:x+1, :]
+        for y in range(out_height):
+            for x in range(out_width):
+                pixel_region = self.X[:, y * self.stride: y * self.stride + self.pool_size,
+                               x * self.stride: x * self.stride + self.pool_size, :]
+                converted_pixel_region = pixel_region.reshape((batch_size, self.pool_size * self.pool_size, channels))
 
-                max_slice_X = np.max(slice_X, axis=(1, 2))[:, np.newaxis, np.newaxis, :]
+                pixel_region_in = np.zeros(converted_pixel_region.shape)
+                maxpool_inds = np.argmax(converted_pixel_region, axis=1).flatten()
 
-                is_max = slice_X == max_slice_X
-                result[:, y_stride:y_stride + self.pool_size, x_stride:x_stride + self.pool_size, :] += slice_grad * is_max
+                pixel_region_in[batch_inds, maxpool_inds, channels_inds] = d_out[batch_inds, y, x, channels_inds]
+                converted_pixel_region_in = pixel_region_in.reshape(
+                    (batch_size, self.pool_size, self.pool_size, channels))
 
-        return result
+                d_in[:, y * self.stride: y * self.stride + self.pool_size,
+                x * self.stride: x * self.stride + self.pool_size, :] = converted_pixel_region_in
+
+        return d_in
 
     def params(self):
         return {}
