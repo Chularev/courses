@@ -27,7 +27,18 @@ class ConvNet:
         conv2_channels, int - number of filters in the 2nd conv layer
         """
         # TODO Create necessary layers
-        raise Exception("Not implemented!")
+
+        self.layers = []
+        self.layers.append(ConvolutionalLayer(input_shape[2], conv1_channels, filter_size=3, padding=1))
+        self.layers.append(ReLULayer())
+        self.layers.append(MaxPoolingLayer(pool_size=4, stride=4))
+        
+        self.layers.append(ConvolutionalLayer(conv1_channels, conv2_channels, filter_size=3, padding=1))
+        self.layers.append(ReLULayer())
+        self.layers.append(MaxPoolingLayer(pool_size=4, stride=4))
+
+        self.layers.append(Flattener())
+        self.layers.append(FullyConnectedLayer(4 * conv2_channels, n_output_classes))
 
     def compute_loss_and_gradients(self, X, y):
         """
@@ -44,17 +55,34 @@ class ConvNet:
         # TODO Compute loss and fill param gradients
         # Don't worry about implementing L2 regularization, we will not
         # need it in this assignment
-        raise Exception("Not implemented!")
+        for param in self.params().values():
+            param.grad = 0
+
+        # TODO Compute loss and fill param gradients
+        # by running forward and backward passes through the model
+        for layer in self.layers:
+            X = layer.forward(X)
+        loss, grad = softmax_with_cross_entropy(X, y)
+
+        for layer in reversed(self.layers):
+            grad = layer.backward(grad)
+
+        return loss
 
     def predict(self, X):
         # You can probably copy the code from previous assignment
-        raise Exception("Not implemented!")
+        for layer in self.layers:
+            X = layer.forward(X)
+        pred = np.argmax(X, axis=1)
+        return pred
 
     def params(self):
         result = {}
 
         # TODO: Aggregate all the params from all the layers
         # which have parameters
-        raise Exception("Not implemented!")
+        for layer_num, layer in enumerate(self.layers):
+            for param_name, param in layer.params().items():
+                result[param_name + '_' + str(layer_num)] = param
 
         return result
