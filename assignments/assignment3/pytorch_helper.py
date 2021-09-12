@@ -10,7 +10,7 @@ from torchvision import transforms
 
 class PyTorchHelper:
 
-    def __init__(self, batch_size, data):
+    def __init__(self,  batch_size, data):
         self.batch_size = batch_size
         self.data = data
         self.device = torch.device("cuda:0")  # Let's make sure GPU is available!
@@ -24,14 +24,7 @@ class PyTorchHelper:
 
         train_indices, val_indices = indices[split:], indices[:split]
 
-        train_sampler = SubsetRandomSampler(train_indices)
-        val_sampler = SubsetRandomSampler(val_indices)
-
-        train_loader = torch.utils.data.DataLoader(self.data, batch_size=self.batch_size,
-                                                   sampler=train_sampler)
-        val_loader = torch.utils.data.DataLoader(self.data, batch_size=self.batch_size,
-                                                 sampler=val_sampler)
-        return train_loader, val_loader
+        return train_indices, val_indices
 
     def train_model(self, model, train_loader, val_loader, loss, optimizer, num_epochs, scheduler=None):
         loss_history = []
