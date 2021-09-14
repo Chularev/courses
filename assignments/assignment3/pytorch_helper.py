@@ -28,9 +28,19 @@ class PyTorchHelper:
 
         return train_indices, val_indices
 
-    def load_model(self, model_name):
+    def load_model(self, model_name, model):
 
-        return 0
+        checkpoint = torch.load(self.output + '/' + model_name)
+        model.load_state_dict(checkpoint['model_state_dict'])
+
+        loss_history = checkpoint['loss_history']
+        train_history = checkpoint['train_history']
+        val_history = checkpoint['val_history']
+
+        for i in range(len(val_history)):
+            print("Average loss: %f, Train accuracy: %f, Val accuracy: %f" % (loss_history[i], train_history[i], val_history[i]))
+
+        return loss_history, train_history, val_history
 
     def save_model(self, model_name, model, loss_history, train_history, val_history):
 
@@ -47,6 +57,10 @@ class PyTorchHelper:
         return 0
 
     def train_model(self, model_name, model, train_loader, val_loader, loss, optimizer, num_epochs, scheduler=None):
+
+        if os.path.isfile(self.output + '/' + model_name):
+            return self.load_model(model_name, model)
+
         loss_history = []
         train_history = []
         val_history = []
@@ -84,7 +98,7 @@ class PyTorchHelper:
 
             print("Average loss: %f, Train accuracy: %f, Val accuracy: %f" % (ave_loss, train_accuracy, val_accuracy))
 
-        self.save_model(model_name, model)
+        self.save_model(model_name, model, loss_history, train_history, val_history)
         return loss_history, train_history, val_history
 
     def compute_accuracy(self, model, loader):
