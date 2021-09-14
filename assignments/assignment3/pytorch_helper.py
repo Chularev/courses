@@ -1,6 +1,7 @@
 import numpy as np
 
 import torch
+import os
 import torch.nn as nn
 import torch.optim as optim
 import torchvision.datasets as dset
@@ -11,6 +12,7 @@ from torchvision import transforms
 class PyTorchHelper:
 
     def __init__(self,  batch_size, data):
+        self.output = 'output'
         self.batch_size = batch_size
         self.data = data
         self.device = torch.device("cuda:0")  # Let's make sure GPU is available!
@@ -26,7 +28,25 @@ class PyTorchHelper:
 
         return train_indices, val_indices
 
-    def train_model(self, model, train_loader, val_loader, loss, optimizer, num_epochs, scheduler=None):
+    def load_model(self, model_name):
+
+        return 0
+
+    def save_model(self, model_name, model, loss_history, train_history, val_history):
+
+        if not os.path.exists(self.output):
+            os.makedirs(self.output)
+
+        torch.save({
+            'model_state_dict': model.state_dict(),
+            'loss_history': loss_history,
+            'train_history' : train_history,
+            'val_history': val_history
+        }, self.output + '/' + model_name)
+
+        return 0
+
+    def train_model(self, model_name, model, train_loader, val_loader, loss, optimizer, num_epochs, scheduler=None):
         loss_history = []
         train_history = []
         val_history = []
@@ -64,6 +84,7 @@ class PyTorchHelper:
 
             print("Average loss: %f, Train accuracy: %f, Val accuracy: %f" % (ave_loss, train_accuracy, val_accuracy))
 
+        self.save_model(model_name, model)
         return loss_history, train_history, val_history
 
     def compute_accuracy(self, model, loader):
