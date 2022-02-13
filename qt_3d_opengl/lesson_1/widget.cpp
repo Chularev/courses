@@ -54,7 +54,7 @@ void Widget::paintGL()
     m_program.enableAttributeArray(vertLoc);
     m_program.setAttributeBuffer(vertLoc, GL_FLOAT, offset, 3, sizeof (VertexData));
 
-    offset += sizeof (VertexData);
+    offset += sizeof (QVector3D);
     int textLoc = m_program.attributeLocation("qt_MultiTexCoord0");
     m_program.enableAttributeArray(textLoc);
     m_program.setAttributeBuffer(textLoc, GL_FLOAT, offset, 2, sizeof (VertexData));
