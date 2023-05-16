@@ -16,7 +16,7 @@ void main(void)
 
     vec3 eyeVect = normalize(v_position.xyz - eyePosition.xyz);
 
-    vec3 lightVect = normalize(v_position.xyz - u_lightPosition);
+    vec3 lightVect = normalize(v_position.xyz - u_lightPosition.xyz);
 
     vec3 refrectLight = normalize(reflect(lightVect, v_normal));
     float len = length(v_position.xyz - eyePosition.xyz);

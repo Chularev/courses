@@ -11,7 +11,7 @@ varying highp vec2 v_texcoord;
 void main(void)
 {
     mat4 viewMatrix = u_viewMatrix;
-    viewMatrix[3][0] = viewMatrix[3][1] = viewMatrix[3][2] = 0;
+    viewMatrix[3][0] = viewMatrix[3][1] = viewMatrix[3][2] = float(0);
 
     mat4 mv_matrix = viewMatrix * u_modelMatrix;
 
