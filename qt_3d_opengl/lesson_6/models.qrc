@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>mesh/untitled.mtl</file>
+        <file>mesh/untitled.obj</file>
+    </qresource>
+</RCC>
