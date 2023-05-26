@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/">
+        <file>mesh/butterfly_free.blend</file>
+        <file>mesh/butterfly_free.fbx</file>
+        <file>mesh/butterfly_free.mtl</file>
+        <file>mesh/butterfly_free.obj</file>
+        <file>mesh/textures_JPG/wing_SSSmask.jpg</file>
+        <file>mesh/textures_JPG/wing_specular.jpg</file>
+        <file>mesh/textures_JPG/wing_roughness.jpg</file>
+        <file>mesh/textures_JPG/wing_normalmap.jpg</file>
+        <file>mesh/textures_JPG/wing_metallic.jpg</file>
+        <file>mesh/textures_JPG/wing_height.jpg</file>
+        <file>mesh/textures_JPG/wing_glossiness.jpg</file>
+        <file>mesh/textures_JPG/wing_alpha.jpg</file>
+        <file>mesh/textures_JPG/wing_albedo.jpg</file>
+        <file>mesh/textures_JPG/body_specular.jpg</file>
+        <file>mesh/textures_JPG/body_roughness.jpg</file>
+        <file>mesh/textures_JPG/body_normalmap.jpg</file>
+        <file>mesh/textures_JPG/body_metalness.jpg</file>
+        <file>mesh/textures_JPG/body_height.jpg</file>
+        <file>mesh/textures_JPG/body_glossiness.jpg</file>
+        <file>mesh/textures_JPG/body_albedo.jpg</file>
+    </qresource>
+</RCC>
