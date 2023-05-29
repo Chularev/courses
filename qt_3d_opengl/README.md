@@ -10,3 +10,4 @@
 [6. Добавлен mesh без материалов](https://github.com/Chularev/courses/tree/main/qt_3d_opengl/lesson_6) | [Ссылка на урок](https://www.youtube.com/watch?v=yM9v9vnNoIE&list=PL-hrQhpTB95LKMbttX47vCsNeGbJQVz1-&index=6) | C++, Qt, OpenGL
 [7. Добавлен класс для загрузки материалов](https://github.com/Chularev/courses/tree/main/qt_3d_opengl/lesson_7) | [Ссылка на урок](https://www.youtube.com/watch?v=AEK_-4rtF1o&list=PL-hrQhpTB95LKMbttX47vCsNeGbJQVz1-&index=7) | C++, Qt, OpenGL
 [8. Сделал текстуру частью материала](https://github.com/Chularev/courses/tree/main/qt_3d_opengl/lesson_8) | [Ссылка на урок](https://www.youtube.com/watch?v=71HR8glNudc&list=PL-hrQhpTB95LKMbttX47vCsNeGbJQVz1-&index=8) | C++, Qt, OpenGL
+[9. Финальный урок по загрузке материалов](https://github.com/Chularev/courses/tree/main/qt_3d_opengl/lesson_9) | [Ссылка на урок](https://www.youtube.com/watch?v=TadCATIDZ2c&list=PL-hrQhpTB95LKMbttX47vCsNeGbJQVz1-&index=9) | C++, Qt, OpenGL
