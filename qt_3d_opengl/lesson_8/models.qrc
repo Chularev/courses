@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>mesh/capsule0.jpg</file>
+        <file>mesh/capsule.obj</file>
+        <file>mesh/capsule.mtl</file>
+        <file>mesh/top-view-background-beautiful-white-grey-brown-cream-blue-background.jpg</file>
+    </qresource>
+</RCC>
